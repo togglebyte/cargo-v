@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 pub enum VersionLabel {
   Major,
   Minor,
@@ -8,7 +10,7 @@ pub enum VersionLabel {
 pub fn update_version(
   cargo_toml_content: &str,
   label: &VersionLabel,
-) -> String {
+) -> Result<String, &'static str> {
   let current_version_tuple = get_version(&cargo_toml_content);
   let (major, minor, patch) = current_version_tuple;
   let new_version = match label {
@@ -16,31 +18,30 @@ pub fn update_version(
     VersionLabel::Minor => format!("{}.{}.0", major, minor + 1),
     VersionLabel::Patch => format!("{}.{}.{}", major, minor, patch + 1),
     VersionLabel::NumericVersion(v) => {
-      parse_numeric_version(&current_version_tuple, v)
+      parse_numeric_version(&current_version_tuple, v)?
     }
   };
 
-  cargo_toml_content.replace(
-    &tuple_version_to_string(&current_version_tuple),
-    &new_version,
-  )
+  let version = tuple_version_to_string(&current_version_tuple);
+  Ok(cargo_toml_content.replace(&version, &new_version))
 }
 
 fn parse_numeric_version(
   current_version_tuple: &(u32, u32, u32),
   numeric_version: &str,
-) -> String {
+) -> Result<String, &'static str> {
   let new_version = numeric_version.replace("v", "");
   let current_version_string = tuple_version_to_string(current_version_tuple);
-  let current_version_number =
-    string_version_to_number(&current_version_string);
+  let current_version_number = string_version_to_number(&current_version_string);
   let new_version_number = string_version_to_number(&new_version);
 
-  if new_version_number < current_version_number {
-    panic!("You can not set a version lower than the current version");
+  match new_version_number.cmp(&current_version_number) {
+    Ordering::Less => {
+      Err("you can not set a version lower than the current version")
+    }
+    Ordering::Equal => Err("You can not set a version equal to it self"),
+    Ordering::Greater => Ok(new_version),
   }
-
-  new_version
 }
 
 fn string_version_to_number(version: &str) -> u32 {
