@@ -108,7 +108,7 @@ mod tests {
     let new_version = VersionLabel::Patch;
     let expected = "[package]\n name = \"cargo-v\"\n version = \"0.0.2\"\n";
 
-    assert_eq!(update_version(&cargo_toml, &new_version), expected);
+    assert_eq!(update_version(&cargo_toml, &new_version).unwrap(), expected);
   }
 
   #[test]
@@ -118,7 +118,7 @@ mod tests {
     let new_version = VersionLabel::Minor;
     let expected = "[package]\n name = \"cargo-v\"\n version = \"0.1.0\"\n";
 
-    assert_eq!(update_version(&cargo_toml, &new_version), expected);
+    assert_eq!(update_version(&cargo_toml, &new_version).unwrap(), expected);
   }
 
   #[test]
@@ -128,7 +128,7 @@ mod tests {
     let new_version = VersionLabel::Major;
     let expected = "[package]\n name = \"cargo-v\"\n version = \"1.0.0\"\n";
 
-    assert_eq!(update_version(&cargo_toml, &new_version), expected);
+    assert_eq!(update_version(&cargo_toml, &new_version).unwrap(), expected);
   }
 
   #[test]
@@ -138,7 +138,7 @@ mod tests {
     let new_version = VersionLabel::NumericVersion(String::from("0.0.2"));
     let expected = "[package]\n name = \"cargo-v\"\n version = \"0.0.2\"\n";
 
-    assert_eq!(update_version(&cargo_toml, &new_version), expected);
+    assert_eq!(update_version(&cargo_toml, &new_version).unwrap(), expected);
   }
 
   #[test]
@@ -148,7 +148,7 @@ mod tests {
     let new_version = VersionLabel::NumericVersion(String::from("0.1.0"));
     let expected = "[package]\n name = \"cargo-v\"\n version = \"0.1.0\"\n";
 
-    assert_eq!(update_version(&cargo_toml, &new_version), expected);
+    assert_eq!(update_version(&cargo_toml, &new_version).unwrap(), expected);
   }
 
   #[test]
@@ -159,7 +159,7 @@ mod tests {
     let expected =
       String::from("[package]\n name = \"cargo-v\"\n version = \"3.0.0\"\n");
 
-    assert_eq!(update_version(&cargo_toml, &new_version), expected);
+    assert_eq!(update_version(&cargo_toml, &new_version).unwrap(), expected);
   }
 
   #[test]
@@ -170,18 +170,18 @@ mod tests {
     let expected =
       String::from("[package]\n name = \"cargo-v\"\n version = \"3.0.0\"\n");
 
-    assert_eq!(update_version(&cargo_toml, &new_version), expected);
+    assert_eq!(update_version(&cargo_toml, &new_version).unwrap(), expected);
   }
 
   #[test]
   #[should_panic(
-    expected = "You can not set a version lower than the current version"
+    expected = "you can not set a version lower than the current version"
   )]
   fn should_not_set_a_new_version_lower_than_current_version() {
     let cargo_toml =
       String::from("[package]\n name = \"cargo-v\"\n version = \"2.2.0\"\n");
     let new_version = VersionLabel::NumericVersion(String::from("2.1.1"));
-    update_version(&cargo_toml, &new_version);
+    update_version(&cargo_toml, &new_version).unwrap();
   }
 
   #[test]
@@ -191,6 +191,6 @@ mod tests {
     let cargo_toml =
       String::from("[package]\n name = \"cargo-v\"\n version = \"2.2.0\"\n");
     let new_version = VersionLabel::NumericVersion(String::from("-2.2.1"));
-    update_version(&cargo_toml, &new_version);
+    update_version(&cargo_toml, &new_version).unwrap();
   }
 }
