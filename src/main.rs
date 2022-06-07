@@ -4,10 +4,7 @@ use std::process::{self, Command};
 use std::{env, fs};
 
 fn main() {
-  let mut args = env::args();
-
-  args.next();
-  args.next();
+  let mut args = env::args().skip(2);
 
   let new_version_input = args
     .next()

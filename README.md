@@ -29,9 +29,9 @@ a git tag with the new version, if you are using git.
 You can use four options to update the version: `patch`, `minor`, `major` or a 
 manually typed version (like `1.0.1`).
 
-### patch
+### `patch`
 
-will change the latest number of version:
+will change the last number of the version string:
 
 **Command:**
 
@@ -48,9 +48,9 @@ version = "0.0.2"
 #              ^ This number will be updated
 ```
 
-### minor
+### `minor`
 
-will change the middle number of version:
+will change the middle number of the version string:
 
 **Command:**
 
@@ -67,9 +67,9 @@ version = "0.1.0"
 #            ^ This number will be updated
 ```
 
-### major
+### `major`
 
-will change the first number of version:
+will change the first number of the version string:
 
 **Command:**
 
@@ -86,7 +86,7 @@ version = "1.0.0"
 #          ^ This number will be updated
 ```
 
-### manually typed version
+### Manually typed version
 
 will change the version with the exact entry:
 
@@ -102,12 +102,6 @@ cargo v 1.0.1
 [package]
 name = "cargo-v"
 version = "1.0.1"
-```
-
-## Run tests
-
-```sh
-cargo test
 ```
 
 ## Author
